@@ -1,9 +1,12 @@
 # Batch TS to MP4 Converter
 
-A robust Python script to batch convert `.ts` video files to `.mp4` format using FFmpeg. It performs a lossless stream copy, ensuring zero quality loss and blazing fast speed.
+A robust Python script to batch convert **standalone** `.ts` video files to `.mp4` format using FFmpeg. It performs a lossless stream copy, ensuring zero quality loss and blazing fast speed.
+
+> ⚠️ **Important Note**: This script is designed for **1-to-1 conversion** (1 TS file = 1 complete video). It is **NOT** designed to merge/join multiple TS fragments (segments) into a single video.
 
 ## ✨ Features
-* **🚀 Lossless & Fast**: Uses FFmpeg's stream copy (`-c copy`) mode. Conversion takes only seconds per video.
+* **🚀 1-to-1 Conversion**: Converts each individual `.ts` file into a separate `.mp4` file. Perfect for standalone recordings, not for HLS segments.
+* **⚡ Lossless & Fast**: Uses FFmpeg's stream copy (`-c copy`) mode. Conversion takes only seconds per video with zero quality loss.
 * **🧹 Filename Cleaning**: Automatically sanitizes filenames by removing illegal characters and spaces to prevent errors.
 * **⏭️ Resume Capability**: Automatically skips files that have already been converted.
 * **📊 Verification Report**: Generates a final comparison report to ensure every source file has a corresponding output file.
@@ -35,10 +38,13 @@ The script will automatically create a new folder (e.g., `Converted_Videos`) nex
 
 # TS转MP4批量转换工具 (中文说明)
 
-这是一个基于 Python 和 FFmpeg 的高效脚本，用于将 `.ts` 视频文件批量无损转换为 `.mp4` 格式。
+这是一个基于 Python 和 FFmpeg 的高效脚本，用于将**独立**的 `.ts` 视频文件批量无损转换为 `.mp4` 格式。
+
+> ⚠️ **重要提示**：本脚本仅适用于**“1对1转换”**（即：一个TS文件就是一个完整的视频）。**不适用**于将多个 TS 切片（如 HLS/m3u8 产生的碎片）合并成一个视频。
 
 ## ✨ 主要功能
-* **🚀 无损极速转换**: 使用 FFmpeg 的流复制模式 (`-c copy`)，无需重新编码，几秒钟完成转换，画质 100% 无损。
+* **🚀 1对1 独立转换**: 每一个 `.ts` 文件都会被转换为一个独立的 `.mp4` 文件。
+* **⚡ 无损极速转换**: 使用 FFmpeg 的流复制模式 (`-c copy`)，无需重新编码，几秒钟完成转换，画质 100% 无损。
 * **🧹 文件名清洗**: 自动清理文件名中的非法字符（如 `?`, `*`）和多余空格，防止报错。
 * **⏭️ 断点续传**: 自动检测并跳过已转换的文件，支持中途停止后继续运行。
 * **📊 最终核对**: 运行结束后生成对比报告，确保源文件和新文件一一对应，无遗漏。
