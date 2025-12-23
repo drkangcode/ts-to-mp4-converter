@@ -72,7 +72,7 @@ graph TD
     
     LoopNext -- All Finished --> VerifyStart[Final Verification]
     VerifyStart --> Compare[Compare Expected vs. Actual] --> End
-
+```
 
 
 
@@ -154,7 +154,7 @@ graph TD
     ScanOutput --> Compare[对比 预期文件列表\n与 实际存在列表]
     Compare --> FinalReport[生成总结报告\n如果有遗漏则打印警告]
     FinalReport --> End
-
+```
 
 
 ## 📄 License
