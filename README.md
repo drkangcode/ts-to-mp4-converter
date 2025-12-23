@@ -114,47 +114,44 @@ graph TD
 ## 📂 输出结果
 脚本会在你的源文件夹旁边自动创建一个新的文件夹（例如 `Converted_Videos`），所有转换好的 mp4 视频都会存放在那里，不会污染源文件夹。
 
+
 ```mermaid
 graph TD
-    Start([开始]) --> Config[读取配置项\n(源路径 和 新文件夹名)]
-    Config --> SourceCheck{源文件夹\n是否存在?}
+    Start([开始]) --> Config["读取配置项\n(源路径 和 新文件夹名)"]
+    Config --> SourceCheck{"源文件夹\n是否存在?"}
     
-    SourceCheck -- 不存在 --> ErrorExit[打印错误信息] --> End([结束])
-    SourceCheck -- 存在 --> DefineOut[定义输出文件夹路径\n(在源文件夹旁边)]
+    SourceCheck -- 否 --> ErrorExit[报错退出] --> End([结束])
+    SourceCheck -- 是 --> DefineOut["定义输出路径\n(在源文件夹旁边)"]
     
-    DefineOut --> OutputCheck{输出文件夹\n是否存在?}
-    OutputCheck -- 不存在 --> CreateOut[创建新的输出文件夹] --> Scan
-    OutputCheck -- 存在 --> Scan[扫描源文件夹中的 .ts 文件]
+    DefineOut --> OutputCheck{"输出文件夹\n是否存在?"}
+    OutputCheck -- 否 --> CreateOut[新建文件夹] --> Scan
+    OutputCheck -- 是 --> Scan["扫描 .ts 文件"]
     
-    Scan --> FilesFound{是否找到\n.ts 文件?}
-    FilesFound -- 没有 --> NoFilesExit[打印无文件提示] --> End
-    FilesFound -- 有 --> Init[初始化日志文件\n并设置计数器]
+    Scan --> FilesFound{"是否找到\n.ts 文件?"}
+    FilesFound -- 否 --> NoFilesExit[无文件提示] --> End
+    FilesFound -- 是 --> Init[初始化日志]
     
-    Init --> LoopStart{{开始循环: 处理每一个 TS 文件}}
+    Init --> LoopStart{{开始循环}}
     
-    LoopStart --> Clean[清洗文件名\n(移除非法字符和多余空格)]
-    Clean --> DefineTarget[定义目标 .mp4 路径]
+    LoopStart --> Clean["清洗文件名\n(去除空格/非法字符)"]
+    Clean --> DefineTarget[生成目标路径]
     
-    DefineTarget --> ExistCheck{目标 .mp4\n是否已存在?}
+    DefineTarget --> ExistCheck{"文件已存在?"}
     
-    ExistCheck -- 是 (断点续传) --> CountSkip[增加跳过计数\n记录日志状态: 跳过] --> LogUpdate
+    ExistCheck -- 是 (跳过) --> CountSkip[记录跳过] --> LogUpdate
     
-    ExistCheck -- 否 (开始处理) --> RunFFmpeg[运行 FFmpeg 命令\n模式: '-c copy' 极速复制]
-    RunFFmpeg --> SuccessCheck{返回码是否为 0\n(成功)?}
+    ExistCheck -- 否 (处理) --> RunFFmpeg[运行 FFmpeg]
+    RunFFmpeg --> SuccessCheck{"是否成功?"}
     
-    SuccessCheck -- 是 --> CountSuccess[增加成功计数\n记录日志状态: 成功] --> LogUpdate
-    SuccessCheck -- 否/出错 --> CountFail[增加失败计数\n捕获并记录错误详情] --> LogUpdate
+    SuccessCheck -- 是 --> CountSuccess[记录成功] --> LogUpdate
+    SuccessCheck -- 否 --> CountFail[记录失败] --> LogUpdate
     
-    LogUpdate[更新终端进度条显示\n写入硬盘日志文件] --> LoopNext{{下一个文件}}
+    LogUpdate --> LoopNext{{下一个}}
     
     LoopNext --> LoopStart
     
-    LoopNext -- 全部完成 --> VerifyStart[开始最终核对]
-    VerifyStart --> ScanOutput[扫描输出文件夹中\n实际存在的 .mp4 文件]
-    ScanOutput --> Compare[对比 预期文件列表\n与 实际存在列表]
-    Compare --> FinalReport[生成总结报告\n如果有遗漏则打印警告]
-    FinalReport --> End
-
+    LoopNext -- 完成 --> VerifyStart[最终核对]
+    VerifyStart --> Compare[对比源文件与结果] --> End
 ```
 
 
