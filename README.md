@@ -2,7 +2,16 @@
 
 A robust Python script to batch convert **standalone** `.ts` video files to `.mp4` format using FFmpeg. It performs a lossless stream copy, ensuring zero quality loss and blazing fast speed.
 
-> ⚠️ **Important Note**: This script is designed for **1-to-1 conversion** (1 TS file = 1 complete video). It is **NOT** designed to merge/join multiple TS fragments (segments) into a single video.
+> [!CAUTION]
+> **CRITICAL NOTE / 关键提示**
+>
+> This script is designed for **1-to-1 conversion** (1 TS file = 1 complete video).
+> **It is NOT designed to merge/join multiple TS fragments (segments) into a single video.**
+>
+> 本脚本仅适用于 **1对1转换**（即：一个TS文件就是一个完整的视频）。
+> **绝不适用** 于将多个 TS 切片（如 HLS/m3u8 产生的碎片）合并成一个视频。
+
+
 
 ## ✨ Features
 * **🚀 1-to-1 Conversion**: Converts each individual `.ts` file into a separate `.mp4` file. Perfect for standalone recordings, not for HLS segments.
