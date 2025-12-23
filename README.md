@@ -34,6 +34,48 @@ A robust Python script to batch convert **standalone** `.ts` video files to `.mp
 ## 📂 Output
 The script will automatically create a new folder (e.g., `Converted_Videos`) next to your source folder to store the mp4 files.
 
+
+```mermaid
+graph TD
+    Start([Start]) --> Config[Read Configuration]
+    Config --> SourceCheck{Source Folder\nExists?}
+    
+    SourceCheck -- No --> ErrorExit[Print Error Message] --> End([End])
+    SourceCheck -- Yes --> DefineOut[Define Output Folder Path]
+    
+    DefineOut --> OutputCheck{Output Folder\nExists?}
+    OutputCheck -- No --> CreateOut[Create New Output Folder] --> Scan
+    OutputCheck -- Yes --> Scan[Scan Source for .ts Files]
+    
+    Scan --> FilesFound{Any .ts Files\nFound?}
+    FilesFound -- No --> NoFilesExit[Print No Files Message] --> End
+    FilesFound -- Yes --> Init[Initialize Log File]
+    
+    Init --> LoopStart{{Start Loop: Process Each TS File}}
+    
+    LoopStart --> Clean[Clean Filename]
+    Clean --> DefineTarget[Define Target .mp4 Path]
+    
+    DefineTarget --> ExistCheck{Target .mp4\nAlready Exists?}
+    
+    ExistCheck -- Yes (Resume) --> CountSkip[Skip & Log] --> LogUpdate
+    
+    ExistCheck -- No (Process) --> RunFFmpeg[Run FFmpeg '-c copy']
+    RunFFmpeg --> SuccessCheck{Success?}
+    
+    SuccessCheck -- Yes --> CountSuccess[Log Success] --> LogUpdate
+    SuccessCheck -- No --> CountFail[Log Failure] --> LogUpdate
+    
+    LogUpdate --> LoopNext{{Next File}}
+    
+    LoopNext --> LoopStart
+    
+    LoopNext -- All Finished --> VerifyStart[Final Verification]
+    VerifyStart --> Compare[Compare Expected vs. Actual] --> End
+
+
+
+
 ---
 
 # TS转MP4批量转换工具 (中文说明)
@@ -71,6 +113,49 @@ The script will automatically create a new folder (e.g., `Converted_Videos`) nex
 
 ## 📂 输出结果
 脚本会在你的源文件夹旁边自动创建一个新的文件夹（例如 `Converted_Videos`），所有转换好的 mp4 视频都会存放在那里，不会污染源文件夹。
+
+```mermaid
+graph TD
+    Start([开始]) --> Config[读取配置项\n(源路径 和 新文件夹名)]
+    Config --> SourceCheck{源文件夹\n是否存在?}
+    
+    SourceCheck -- 不存在 --> ErrorExit[打印错误信息] --> End([结束])
+    SourceCheck -- 存在 --> DefineOut[定义输出文件夹路径\n(在源文件夹旁边)]
+    
+    DefineOut --> OutputCheck{输出文件夹\n是否存在?}
+    OutputCheck -- 不存在 --> CreateOut[创建新的输出文件夹] --> Scan
+    OutputCheck -- 存在 --> Scan[扫描源文件夹中的 .ts 文件]
+    
+    Scan --> FilesFound{是否找到\n.ts 文件?}
+    FilesFound -- 没有 --> NoFilesExit[打印无文件提示] --> End
+    FilesFound -- 有 --> Init[初始化日志文件\n并设置计数器]
+    
+    Init --> LoopStart{{开始循环: 处理每一个 TS 文件}}
+    
+    LoopStart --> Clean[清洗文件名\n(移除非法字符和多余空格)]
+    Clean --> DefineTarget[定义目标 .mp4 路径]
+    
+    DefineTarget --> ExistCheck{目标 .mp4\n是否已存在?}
+    
+    ExistCheck -- 是 (断点续传) --> CountSkip[增加跳过计数\n记录日志状态: 跳过] --> LogUpdate
+    
+    ExistCheck -- 否 (开始处理) --> RunFFmpeg[运行 FFmpeg 命令\n模式: '-c copy' 极速复制]
+    RunFFmpeg --> SuccessCheck{返回码是否为 0\n(成功)?}
+    
+    SuccessCheck -- 是 --> CountSuccess[增加成功计数\n记录日志状态: 成功] --> LogUpdate
+    SuccessCheck -- 否/出错 --> CountFail[增加失败计数\n捕获并记录错误详情] --> LogUpdate
+    
+    LogUpdate[更新终端进度条显示\n写入硬盘日志文件] --> LoopNext{{下一个文件}}
+    
+    LoopNext --> LoopStart
+    
+    LoopNext -- 全部完成 --> VerifyStart[开始最终核对]
+    VerifyStart --> ScanOutput[扫描输出文件夹中\n实际存在的 .mp4 文件]
+    ScanOutput --> Compare[对比 预期文件列表\n与 实际存在列表]
+    Compare --> FinalReport[生成总结报告\n如果有遗漏则打印警告]
+    FinalReport --> End
+
+
 
 ## 📄 License
 MIT License
